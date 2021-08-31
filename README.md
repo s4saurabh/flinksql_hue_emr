@@ -41,17 +41,17 @@ sudo /etc/hue/conf/hue.ini
 ```
 
 ```
-**`[notebook]
-`**`enable_notebook_2=true`**` 
-`**
+[notebook]
+enable_notebook_2=true
+
 # One entry for each type of snippet.
   [[interpreters]]
     # Define the name and how to connect and execute the language.
     # https://docs.gethue.com/administrator/configuration/editor/
-    **[[[****flink****]]]**
- **name****=****Flink**
- **** **interface****=****flink**
- **options****=****'{"url": "http://127.0.0.1:8083"}'**
+    [[[flink]]]
+     name=Flink
+     interface=flink
+     options='{"url": "http://127.0.0.1:8083"}'
 ```
 
 5. **Restart Hue**
@@ -78,11 +78,16 @@ You should see Flink listed as an editor in Hue.
      
 Run a sample query:
 
-`SELECT``` ```name``,` ```COUNT``(``*``)``` ```AS``` ```cnt``` ```FROM``` ```(``VALUES``` ```(``'Sam'``)``,``(``'Bob'``)``,` ```(``'Alice'``)``,` ```(``'Greg'``)``,` ```(``'Bob'``)``,``(``'Alice'``)``,``(``'Bob'``))``` ```AS``` ```NameTable``(``name``)``` ```GROUP``` ```BY``` ```name`
+``SELECT name, 
+    COUNT(*) AS cnt 
+  FROM (VALUES('Sam'),('Bob'),('Alice'),('Greg'),('Bob'),('Alice'),('Bob')) 
+  AS NameTable(name) 
+  GROUP BY name
+``
 
 **Create a Table using datagen connector to simulate streaming data:**
 
-CREATE TABLE orders (
+``CREATE TABLE orders (
 order_id INT,
 price DECIMAL(4,2),
 buyer STRING,
@@ -92,12 +97,14 @@ WITH (
 'connector' = 'datagen',
 'rows-per-second'='500',
 'fields.buyer.length'='3' )
+``
 
 **Run a streaming analytics query:**
-SELECT buyer, COUNT(buyer) AS buyer_count
+`SELECT buyer, COUNT(buyer) AS buyer_count
 FROM orders
 GROUP BY TUMBLE(order_time, INTERVAL '10' second), buyer
 HAVING COUNT(buyer) > 4;
+`
 
 You should see the jobs running on Flink Dashboard when submitted from Hue Flink Sql Interface. Results should appear under Hue Results’s tab:
 
