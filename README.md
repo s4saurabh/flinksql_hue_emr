@@ -11,19 +11,20 @@
 2. **Start Flink Cluster as Yarn application:**
 
 ```
-`flink-yarn-session -n 2 -s 4 -tm 16GB -d`
+flink-yarn-session -n 2 -s 4 -tm 16GB -d
 ```
 
 **Optional Start Flink in Standalone Mode:**
 
-`cd /usr/lib/flink/`
-`sudo ./bin/start-cluster.sh`
+```cd /usr/lib/flink/```  
+```sudo ./bin/start-cluster.sh```
 
 
 3. **Install Flink Gateway Server**
 
-sudo yum install git -y
+```sudo yum install git -y
 export FLINK_HOME=/usr/lib/flink
+
 
 wget https://github.com/ververica/flink-sql-gateway/archive/refs/tags/flink-1.12.0.tar.gz
 tar xvf flink-1.12.0.tar.gz
@@ -33,6 +34,7 @@ sudo mvn install
 mkdir lib
 cp target/flink*.jar lib/
 bin/sql-gateway.sh
+```
 
 4. **Edit Hue.ini and update the notebook and interpreters sections:** 
 
@@ -68,7 +70,7 @@ Navigate to EMR Console Resource Manager. Click on the ApplicationMaster for the
 
 <img src="img/emr-console.png">
 
-Open Hue from EMR Console
+7. **Open Hue from EMR Console**
 
 <img src="img/emr-ui.png">
 
@@ -78,16 +80,18 @@ You should see Flink listed as an editor in Hue.
      
 Run a sample query:
 
-``SELECT name, 
+```
+SELECT name, 
     COUNT(*) AS cnt 
   FROM (VALUES('Sam'),('Bob'),('Alice'),('Greg'),('Bob'),('Alice'),('Bob')) 
   AS NameTable(name) 
   GROUP BY name
-``
+```
 
 **Create a Table using datagen connector to simulate streaming data:**
 
-``CREATE TABLE orders (
+```
+CREATE TABLE orders (
 order_id INT,
 price DECIMAL(4,2),
 buyer STRING,
@@ -97,14 +101,15 @@ WITH (
 'connector' = 'datagen',
 'rows-per-second'='500',
 'fields.buyer.length'='3' )
-``
+```
 
 **Run a streaming analytics query:**
-`SELECT buyer, COUNT(buyer) AS buyer_count
+```
+SELECT buyer, COUNT(buyer) AS buyer_count
 FROM orders
 GROUP BY TUMBLE(order_time, INTERVAL '10' second), buyer
 HAVING COUNT(buyer) > 4;
-`
+```
 
 You should see the jobs running on Flink Dashboard when submitted from Hue Flink Sql Interface. Results should appear under Hue Results’s tab:
 
