@@ -1,25 +1,26 @@
 # FlinkSql with EMR/Hue
 
-1. Launch EMR Cluster with Flink and Hue 
+1. **Launch EMR Cluster with Flink and Hue** 
 
-[Image: img/emr-cluster.png]
+<img src="img/emr-cluster.png">
+
 1. SSH into master node of the EMR cluster
 
 
 
-1. **Start Flink Cluster as Yarn application:**
+2. **Start Flink Cluster as Yarn application:**
 
 ```
 `flink-yarn-session -n 2 -s 4 -tm 16GB -d`
 ```
 
-1. Optional Start Flink in Standalone Mode:
+**Optional Start Flink in Standalone Mode:**
 
 `cd /usr/lib/flink/`
 `sudo ./bin/start-cluster.sh`
 
 
-1. Install Flink Gateway Server
+3. **Install Flink Gateway Server**
 
 sudo yum install git -y
 export FLINK_HOME=/usr/lib/flink
@@ -33,7 +34,7 @@ mkdir lib
 cp target/flink*.jar lib/
 bin/sql-gateway.sh
 
-**Edit Hue.ini and update the notebook and interpreters sections:** 
+4. **Edit Hue.ini and update the notebook and interpreters sections:** 
 
 ```
 sudo /etc/hue/conf/hue.ini
@@ -53,7 +54,7 @@ sudo /etc/hue/conf/hue.ini
  **options****=****'{"url": "http://127.0.0.1:8083"}'**
 ```
 
-**Restart Hue**
+5. **Restart Hue**
 
 ```
 sudo systemctl stop hue
@@ -61,17 +62,21 @@ sudo systemctl start hue
 sudo systemctl status hue
 ```
 
-Setup SSH Proxy and browser proxy to access the EMR UI links.
+6. **Setup SSH Proxy and browser proxy to access the EMR UI links.**
 
 Navigate to EMR Console Resource Manager. Click on the ApplicationMaster for the Flink Job under the Tracking UI:
 
-[Image: img/emr-console.png]
+<img src="img/emr-console.png">
 
 Open Hue from EMR Console
 
-[Image: img/emr-ui.png]
+<img src="img/emr-ui.png">
+
 You should see Flink listed as an editor in Hue.
-[Image: img/hue-ui.png]Run a sample query:
+
+<img src="img/hue-ui.png">
+     
+Run a sample query:
 
 `SELECT``` ```name``,` ```COUNT``(``*``)``` ```AS``` ```cnt``` ```FROM``` ```(``VALUES``` ```(``'Sam'``)``,``(``'Bob'``)``,` ```(``'Alice'``)``,` ```(``'Greg'``)``,` ```(``'Bob'``)``,``(``'Alice'``)``,``(``'Bob'``))``` ```AS``` ```NameTable``(``name``)``` ```GROUP``` ```BY``` ```name`
 
@@ -96,8 +101,8 @@ HAVING COUNT(buyer) > 4;
 
 You should see the jobs running on Flink Dashboard when submitted from Hue Flink Sql Interface. Results should appear under Hue Results’s tab:
 
-[Image: img/flink-dashboard.png]
-[Image: img/flink-query.png]
+<img src="img/flink-dashboard.png">
+<img src="img/flink-query.png">
 
 
 
