@@ -1,5 +1,14 @@
 # FlinkSql with EMR/Hue
 
+To use FlinkSql with EMR/Hue couple of steps needs to done. Hue can't directly talk to Flink Cluster and submit jobs. For Hue to support FlinkSQL and submitting jobs from FlinkSql to Flink Cluster we need to install <a href="https://github.com/ververica/flink-sql-gateway/">Flink Gateway Server</a>.
+
+Flink Gateway Server provides a Rest Gateway and a middle layer that can facilitate the interaction between Hue and Flink Cluster.
+
+
+<img src="img/arch.png">
+
+Follow the steps below to get Hue with FlinkSql submitting jobs to Flink Cluster.
+
 1. **Launch EMR Cluster with Flink and Hue** 
 
 <img src="img/emr-cluster.png">
